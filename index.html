@@ -2,110 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SafeNest</title>
-  <script defer src="app.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Share Tech Mono', monospace;
-    }
-
-    body {
-      background: #0f0f0f;
-      color: #39ff14;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      animation: float 2s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-8px);
-      }
-    }
-
-    .container {
-      background: rgba(0, 0, 0, 0.8);
-      border: 2px solid #39ff14;
-      padding: 25px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 15px #39ff14;
-    }
-
-    input, button {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      background: #1e1e1e;
-      border: 2px solid #39ff14;
-      border-radius: 8px;
-      color: #39ff14;
-      font-size: 1rem;
-      transition: all 0.3s ease-in-out;
-    }
-
-    input:focus, button:hover {
-      outline: none;
-      background: #000;
-      box-shadow: 0 0 10px #39ff14;
-    }
-
-    button {
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #passwordList {
-      margin-top: 20px;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    #enterBtn {
-      padding: 15px;
-      background-color: transparent;
-      color: #39ff14;
-      border: 2px solid #39ff14;
-      font-size: 1.2rem;
-      border-radius: 10px;
-      transition: all 0.3s ease-in-out;
-    }
-
-    #enterBtn:hover {
-      background: #39ff14;
-      color: black;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeNest - Password Vault</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🔐 Welcome to SafeNest</h1>
-  <div id="welcome">
-    <button id="enterBtn">Enter Vault</button>
-  </div>
-
-  <div class="container" id="vault" style="display: none;">
+  <h1>🔐 SafeNest Vault</h1>
+  <div class="container">
     <input type="text" id="site" placeholder="🌐 Website/App Name" />
-    <input type="text" id="user" placeholder="👤 Username/Email" />
-    <input type="password" id="pass" placeholder="🔑 Password" />
+    <input type="text" id="username" placeholder="👤 Username/Email" />
+    <input type="password" id="password" placeholder="🔑 Password" />
     <button onclick="savePassword()">💾 Save Password</button>
-    <button onclick="viewPasswords()">📂 View Saved</button>
-    <div id="passwordList"></div>
+    <button onclick="viewPasswords()">📂 View Saved Passwords</button>
+    <div id="output"></div>
   </div>
 
   <script src="app.js"></script>
