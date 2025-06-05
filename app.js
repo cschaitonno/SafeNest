@@ -1,47 +1,40 @@
-// AES Encryption functions using CryptoJS
-// Add this script to your index.html:
-// <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+const secret = "safenest-key"; // Optional secret for XOR
 
-const masterKey = prompt("🔐 Enter your master key (don’t forget it!)");
+document.getElementById("enterBtn").onclick = () => {
+  document.getElementById("welcome").style.display = "none";
+  document.getElementById("vault").style.display = "block";
+};
 
-function encrypt(text) {
-  return CryptoJS.AES.encrypt(text, masterKey).toString();
-}
-
-function decrypt(cipher) {
-  try {
-    const bytes = CryptoJS.AES.decrypt(cipher, masterKey);
-    return bytes.toString(CryptoJS.enc.Utf8);
-  } catch (e) {
-    return "[Error decrypting]";
-  }
+function xorEncryptDecrypt(str, key) {
+  return str.split('').map((char, i) =>
+    String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(i % key.length))
+  ).join('');
 }
 
 function savePassword() {
-  const site = prompt("🌐 Website:");
-  const username = prompt("👤 Username:");
-  const password = prompt("🔑 Password:");
-  const entry = `${site} | ${username} | ${password}`;
-  const encrypted = encrypt(entry);
-  let vault = JSON.parse(localStorage.getItem("vault") || "[]");
-  vault.push(encrypted);
-  localStorage.setItem("vault", JSON.stringify(vault));
-  alert("✅ Encrypted & Saved!");
-  showVault();
+  const site = document.getElementById("site").value;
+  const user = document.getElementById("user").value;
+  const pass = document.getElementById("pass").value;
+
+  if (!site || !user || !pass) return alert("❗ All fields required.");
+
+  const encrypted = xorEncryptDecrypt(`${site} | ${user} | ${pass}`, secret);
+  let existing = localStorage.getItem("safenest") || "";
+  existing += encrypted + "\n";
+  localStorage.setItem("safenest", existing);
+
+  alert("✅ Saved Successfully!");
+  document.getElementById("site").value = "";
+  document.getElementById("user").value = "";
+  document.getElementById("pass").value = "";
 }
 
-function showVault() {
-  const vault = JSON.parse(localStorage.getItem("vault") || "[]");
-  app.innerHTML = "<h2>🔒 Encrypted Vault:</h2><ul>" + 
-    vault.map(c => `<li>${decrypt(c)}</li>`).join("") + 
-    "</ul>";
+function viewPasswords() {
+  let data = localStorage.getItem("safenest");
+  if (!data) return alert("⚠️ No data found.");
+
+  const lines = data.trim().split("\n");
+  const decrypted = lines.map(line => xorEncryptDecrypt(line, secret)).join("\n");
+
+  document.getElementById("passwordList").textContent = decrypted;
 }
-
-const app = document.getElementById("app");
-
-const btn = document.createElement("button");
-btn.innerText = "➕ Save New Password";
-btn.onclick = savePassword;
-document.body.appendChild(btn);
-
-showVault();
