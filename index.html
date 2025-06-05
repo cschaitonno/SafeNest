@@ -1,107 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SafeNest</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css" />
   <script defer src="app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: white;
+      background: #0f0f0f;
+      color: #39ff14;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .landing {
-      text-align: center;
-      animation: fadeIn 2s ease;
-    }
-
-    .landing h1 {
-      font-size: 3em;
-      margin-bottom: 20px;
-      color: #00ffff;
-      text-shadow: 0 0 10px #00ffff;
-    }
-
-    .landing button {
-      padding: 12px 25px;
-      font-size: 1.1em;
-      border: none;
-      border-radius: 10px;
-      background: #00ffff;
-      color: #000;
-      cursor: pointer;
-      box-shadow: 0 0 15px #00ffff;
-      transition: 0.3s ease;
-    }
-
-    .landing button:hover {
-      background: #0ff;
-      transform: scale(1.05);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .vault-container {
-      display: none;
       flex-direction: column;
-      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #39ff14;
+      padding: 25px;
+      border-radius: 12px;
       width: 90%;
       max-width: 400px;
+      box-shadow: 0 0 15px #39ff14;
     }
 
-    input, textarea, button {
-      padding: 10px;
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #1e1e1e;
+      border: 2px solid #39ff14;
       border-radius: 8px;
-      border: none;
-      font-size: 1em;
+      color: #39ff14;
+      font-size: 1rem;
+      transition: all 0.3s ease-in-out;
+    }
+
+    input:focus, button:hover {
+      outline: none;
+      background: #000;
+      box-shadow: 0 0 10px #39ff14;
     }
 
     button {
-      background: #00ffff;
-      color: black;
       font-weight: bold;
       cursor: pointer;
+    }
+
+    #passwordList {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #enterBtn {
+      padding: 15px;
+      background-color: transparent;
+      color: #39ff14;
+      border: 2px solid #39ff14;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    #enterBtn:hover {
+      background: #39ff14;
+      color: black;
     }
   </style>
 </head>
 <body>
-
-  <div class="landing" id="landingPage">
-    <h1>🔐 Welcome to SafeNest</h1>
-    <button onclick="enterVault()">Enter Vault</button>
+  <h1>🔐 Welcome to SafeNest</h1>
+  <div id="welcome">
+    <button id="enterBtn">Enter Vault</button>
   </div>
 
-  <div class="vault-container" id="vaultApp">
-    <h2>Password Vault</h2>
-    <input type="text" id="website" placeholder="Website / App">
-    <input type="text" id="username" placeholder="Username / Email">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="savePassword()">Save Password</button>
-
-    <hr style="border-color:#00ffff; width:100%;">
-
-    <button onclick="viewPasswords()">View Saved Passwords</button>
-    <textarea id="vaultOutput" rows="8" placeholder="Saved passwords will appear here..." readonly></textarea>
+  <div class="container" id="vault" style="display: none;">
+    <input type="text" id="site" placeholder="🌐 Website/App Name" />
+    <input type="text" id="user" placeholder="👤 Username/Email" />
+    <input type="password" id="pass" placeholder="🔑 Password" />
+    <button onclick="savePassword()">💾 Save Password</button>
+    <button onclick="viewPasswords()">📂 View Saved</button>
+    <div id="passwordList"></div>
   </div>
 
-  <script>
-    function enterVault() {
-      document.getElementById("landingPage").style.display = "none";
-      document.getElementById("vaultApp").style.display = "flex";
-    }
-  </script>
-
+  <script src="app.js"></script>
 </body>
 </html>
