@@ -1,32 +1,78 @@
-let passwords = [];
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyANaNH7vhjY8J5s1fXEV1HkJYVyMX1MZ8c",
+  authDomain: "safenest-86239.firebaseapp.com",
+  projectId: "safenest-86239",
+  storageBucket: "safenest-86239.appspot.com",
+  messagingSenderId: "953155362365",
+  appId: "1:953155362365:web:045cd9f3321b09a1edd454",
+  measurementId: "G-DJKXC1E5MV"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+function register() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(() => alert("✅ Registered Successfully"))
+    .catch(err => alert("❌ " + err.message));
+}
+
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      document.getElementById("auth-container").style.display = "none";
+      document.getElementById("app-container").style.display = "block";
+    })
+    .catch(err => alert("❌ " + err.message));
+}
+
+function logout() {
+  auth.signOut().then(() => {
+    document.getElementById("auth-container").style.display = "block";
+    document.getElementById("app-container").style.display = "none";
+  });
+}
 
 function savePassword() {
-  const site = document.getElementById("site").value.trim();
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const user = auth.currentUser;
+  const site = document.getElementById("site").value;
+  const siteUser = document.getElementById("siteUser").value;
+  const sitePass = document.getElementById("sitePass").value;
 
-  if (!site || !username || !password) {
-    alert("❗ Please fill out all fields.");
-    return;
-  }
-
-  passwords.push({ site, username, password });
-  localStorage.setItem("safenestVault", JSON.stringify(passwords));
-  alert("✅ Saved Successfully!");
-  document.getElementById("site").value = "";
-  document.getElementById("username").value = "";
-  document.getElementById("password").value = "";
-}
-
-function viewPasswords() {
-  const stored = JSON.parse(localStorage.getItem("safenestVault")) || [];
-  let output = "";
-  if (stored.length === 0) {
-    output = "⚠️ No passwords saved.";
-  } else {
-    stored.forEach((entry, i) => {
-      output += `<div class='password-entry'><strong>${entry.site}</strong><br>👤 ${entry.username}<br>🔑 ${entry.password}</div>`;
+  if (user) {
+    db.collection("users").doc(user.uid).collection("passwords").add({
+      site, siteUser, sitePass
+    }).then(() => {
+      alert("🔐 Password Saved");
+      document.getElementById("site").value = '';
+      document.getElementById("siteUser").value = '';
+      document.getElementById("sitePass").value = '';
     });
   }
-  document.getElementById("output").innerHTML = output;
 }
+
+function loadPasswords() {
+  const user = auth.currentUser;
+  const list = document.getElementById("password-list");
+  list.innerHTML = "";
+
+  if (user) {
+    db.collection("users").doc(user.uid).collection("passwords").get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const item = document.createElement("li");
+          item.textContent = `${data.site} | ${data.siteUser} | ${data.sitePass}`;
+          list.appendChild(item);
+        });
+      });
+  }
+      }
+    
